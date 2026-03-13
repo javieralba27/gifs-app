@@ -3,6 +3,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    // vamos a tomar el root "." como la baseurl
+    //Creando alias para environment el paths "@environments/*"
+    "baseUrl": ".",
+    "paths": {
+      "@environments/*": ["src/environments/*"]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
