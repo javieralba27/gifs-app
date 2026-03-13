@@ -1,14 +1,15 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
+  <!-- track es para darle seguiemto por x datos asignado-->
+  <!-- al @for le pasamos la señal  gifs() y de esa manera recorremos los datos del arreglo[]
+   que desde un inicio lo plasmamo en trending-page.ts "const imageUrls: string[]"-->
+
+  @for (gif of gifs(); track gif) {
+
     <!--llamado al componente hijo -->
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
-    <gif-list-item />
+    <!-- Hacemos el llamado a la variable que requerimos desde un inicio en el gif-list.ts-->
+    <gif-list-item [imgeUrl]="gif" />
+
+  }
 
 </div>

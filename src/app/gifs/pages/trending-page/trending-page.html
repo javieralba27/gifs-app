@@ -1,5 +1,10 @@
 <!--  gif-list se encuentre el gif-list-i  -->
 <section class="py-5">
 
-  <gif-list />
+  <!-- AQUI ESTA TODO-->
+
+  <!-- gifs = signal(imageUrls); es la señal que viene del trending-page.ts-->
+   <!-- La señal se llama y adicional de agrega los parentesis () de esta manera gifs()-->
+
+  <gif-list [gifs]="gifs()" />
 </section>
