@@ -30,6 +30,8 @@ export default class TrendingPage {
 
   // Importamos el servios de los gifs referente a la api de gifs
   // Si hay una instancia la va a inyectar
+
+  //GifService en la clase creada en el archivo "gifs.service.ts"
   gifService = inject( GifService );
 
 }

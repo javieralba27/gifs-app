@@ -4,6 +4,7 @@ import type { GiphyResponse } from '../interfaces/giphy.interface';
 import { environment } from '@environments/environment';
 import { Gif } from '../interfaces/gif.interface';
 import { GitMapper } from '../mapper/gif.mapper';
+import { map } from 'rxjs';
 
 
 @Injectable({providedIn: 'root'})
@@ -31,6 +32,8 @@ export class GifService {
 
   loadTrendingGifs(){
 
+    // GiphyResponse esta plasmada en la interface archivo "giphy.interface.ts"
+
     // realizando peticion get al empoint https://api.giphy.com/v1/gifs/trending?
     // Por lo tanto debemos crear en nuestra variable de entorno "environment.ts" giphyUrl: 'https://api.giphy.com/v1
     // Enviamos las variables de entorno "giphyUrl"
@@ -50,6 +53,45 @@ export class GifService {
       this.trendingGifsLoading.set(false);
       console.log({ gifs });
     } )
+
+  }
+
+
+
+  // APARTADO DE SEARCH - BUSCADOR
+
+  searchGifs(query: string) {
+    // GiphyResponse esta plasmada en la interface archivo "giphy.interface.ts"
+
+    // realizando peticion get al empoint https://api.giphy.com/v1/gifs/search
+    // Por lo tanto debemos crear en nuestra variable de entorno "environment.ts" giphyUrl: 'https://api.giphy.com/v1
+    // Enviamos las variables de entorno "giphyUrl"
+
+    // al generar el return al inicio de la peticon http podemos utilizar al subscribe en el archivo "searh-page.ts"
+
+    return this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
+      params: {
+        //enviamos la api_key que esta en la variable de entorno "giphyApiKey"
+        api_key: environment.giphyApiKey,
+        limit: 20,
+        q: query,
+
+      },
+      // La peticion no se dispara hasta no exista el subscribe
+    })
+    .pipe(
+      //map nos permite transformar nuestra data
+      map( ({data}) => data ),
+      map((items) => GitMapper.mapGiphyItemsToGifArrays(items) )
+
+      // TODO Historial
+    );
+    /*.subscribe( (resp) => {
+      //console.log( { resp } )
+      const gifs = GitMapper.mapGiphyItemsToGifArrays(resp.data);
+
+      console.log({ search: gifs });
+    } ) */
 
   }
 
