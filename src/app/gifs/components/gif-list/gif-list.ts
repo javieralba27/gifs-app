@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { GifListItem } from "./gif-list-item/gif-list-item";
+import { Gif } from '../../interfaces/gif.interface';
 
 @Component({
   selector: 'gif-list',
@@ -11,5 +12,7 @@ export class GifList {
   //TODO: input string[]
 
   // gifs es una señal que requerimos como input y  luego le pasamos un arreglo de string
-  gifs = input.required<string[]>();
+  //gifs = input.required<string[]>();
+  gifs = input.required<Gif[]>();
+
 }
