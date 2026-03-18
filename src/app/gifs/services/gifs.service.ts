@@ -1,10 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import type { GiphyResponse } from '../interfaces/giphy.interface';
 import { environment } from '@environments/environment';
 import { Gif } from '../interfaces/gif.interface';
 import { GitMapper } from '../mapper/gif.mapper';
 import { map, Observable, tap } from 'rxjs';
+
+// Constante para trabajar con el localStorage
+const GIF_KEY = 'gifs';
+
+// FUNCION PARA EL LOCALSTORAGE
+const loadFromLocalStorage = () => {
+  const gifsFromLocalStorage = localStorage.getItem(GIF_KEY) ?? '{}';
+  const gifs = JSON.parse(gifsFromLocalStorage);
+
+  console.log(gifs);
+  return gifs;
+}
 
 
 @Injectable({providedIn: 'root'})
@@ -23,7 +35,9 @@ export class GifService {
   trendingGifsLoading = signal(true);
 
   // Creamos la señal searchHistory para guardar el historial de busque lo inicializamos como un objecto vacio
-  searchHistory = signal<Record<string, Gif[]>>({})
+  //searchHistory = signal<Record<string, Gif[]>>({})
+  searchHistory = signal<Record<string, Gif[]>>( loadFromLocalStorage() )
+
 
   //Busqueda ya realizada el cual obtine las llaves de busquedas searchHistory
   searchHistoryKeys = computed(() => Object.keys(this.searchHistory()) )
@@ -33,6 +47,15 @@ export class GifService {
     this.loadTrendingGifs();
     console.log("Servicio Creado");
   }
+
+  //METODO QUE IMPLEMENTA EL LOCAL STORE
+  // El efecto se dispara cada vez que searchHistory cambie
+  saveGifsToLocalStorage = effect(() => {
+    const historyString = JSON.stringify(this.searchHistory());
+
+    //Lo almacenamos en el local storage
+    localStorage.setItem(GIF_KEY, historyString);
+  })
 
   // Metodo en cual realiza la peticion http
 
