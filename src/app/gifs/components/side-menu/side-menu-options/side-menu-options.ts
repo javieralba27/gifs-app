@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { GifService } from 'src/app/gifs/services/gifs.service';
 
 // Creando Interface del menu de opciones
 
@@ -16,6 +17,11 @@ interface MenuOption {
   templateUrl: './side-menu-options.html',
 })
 export class SideMenuOptions {
+
+  // Inyectando el servicio la class GifService se encuentra en "gifs.service.ts"
+  // luego con dicho servicio traemos la informacion de la busqueda en el archivo "side-menu-options.html"
+  gifService = inject(GifService)
+
 
   // property  menuOptions en el cual va se un arreglo de tipo MenuOption[] se vincula a la interface MenuOption
   // dentro contiene objectos {}

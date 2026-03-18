@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import type { GiphyResponse } from '../interfaces/giphy.interface';
 import { environment } from '@environments/environment';
 import { Gif } from '../interfaces/gif.interface';
 import { GitMapper } from '../mapper/gif.mapper';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 
 @Injectable({providedIn: 'root'})
@@ -21,6 +21,12 @@ export class GifService {
 
   // Creamos la señal trendingGifsLoading
   trendingGifsLoading = signal(true);
+
+  // Creamos la señal searchHistory para guardar el historial de busque lo inicializamos como un objecto vacio
+  searchHistory = signal<Record<string, Gif[]>>({})
+
+  //Busqueda ya realizada el cual obtine las llaves de busquedas searchHistory
+  searchHistoryKeys = computed(() => Object.keys(this.searchHistory()) )
 
   //Definimos nuestro constructor
   constructor(){
@@ -82,9 +88,17 @@ export class GifService {
     .pipe(
       //map nos permite transformar nuestra data
       map( ({data}) => data ),
-      map((items) => GitMapper.mapGiphyItemsToGifArrays(items) )
+      map((items) => GitMapper.mapGiphyItemsToGifArrays(items) ),
 
-      // TODO Historial
+      //  Historial
+      //tag es para generar efectos secundarios
+      tap( items => {
+        //Necesitamos la actualizacion de una señal
+        this.searchHistory.update( (history) => ({
+          ...history,
+          [query.toLowerCase()]: items,
+        }))
+      })
     );
     /*.subscribe( (resp) => {
       //console.log( { resp } )
