@@ -4,7 +4,7 @@ import type { GiphyResponse } from '../interfaces/giphy.interface';
 import { environment } from '@environments/environment';
 import { Gif } from '../interfaces/gif.interface';
 import { GitMapper } from '../mapper/gif.mapper';
-import { map, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 
 @Injectable({providedIn: 'root'})
@@ -66,7 +66,7 @@ export class GifService {
 
   // APARTADO DE SEARCH - BUSCADOR
 
-  searchGifs(query: string) {
+  searchGifs(query: string): Observable<Gif[]> {
     // GiphyResponse esta plasmada en la interface archivo "giphy.interface.ts"
 
     // realizando peticion get al empoint https://api.giphy.com/v1/gifs/search
@@ -107,6 +107,11 @@ export class GifService {
       console.log({ search: gifs });
     } ) */
 
+  }
+
+  //Metodo
+  getHistoryGifs( query: string ): Gif[] {
+    return this.searchHistory()[query] ?? [];
   }
 
 }
